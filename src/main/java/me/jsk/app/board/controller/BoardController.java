@@ -23,7 +23,7 @@ import me.jsk.app.board.service.BoardService;
 @CrossOrigin
 @Controller
 @EnableAutoConfiguration
-@RequestMapping("/board")
+@RequestMapping("/api/board")
 public class BoardController {
 
   @Autowired
@@ -37,7 +37,7 @@ public class BoardController {
    * @throws Exception
    */
   @ResponseBody
-  @GetMapping(value="/list")
+  @GetMapping(value="/api/list")
   public HashMap<String, Object> selectBoardList(HttpServletRequest request, HttpServletResponse response) throws Exception {
     String schType = request.getParameter("schType");
     String schVal = request.getParameter("schVal");
@@ -75,7 +75,7 @@ public class BoardController {
    * @throws Exception
    */
   @ResponseBody
-  @GetMapping(value = "/detail")
+  @GetMapping(value = "/api/detail")
   public BoardVO selectBoardDetail(HttpServletRequest request, HttpServletResponse response) throws Exception {
     String docNo = request.getParameter("docNo");
 
@@ -98,7 +98,7 @@ public class BoardController {
    * @throws Exception
    */
   @ResponseBody
-  @PostMapping(value = "/insert")
+  @PostMapping(value = "/api/insert")
   public int insertBoard(HttpServletRequest request, HttpServletResponse response) throws Exception{
     String title = request.getParameter("title");
     String content = request.getParameter("content");
@@ -128,7 +128,7 @@ public class BoardController {
    * @throws Exception
    */
   @ResponseBody
-  @PostMapping(value = "/update")
+  @PostMapping(value = "/api/update")
   public int updateBoard(HttpServletRequest request, HttpServletResponse response) throws Exception{
     String docNo = request.getParameter("docNo");
     String title = request.getParameter("title");
@@ -152,7 +152,7 @@ public class BoardController {
    * @throws Exception
    */
   @ResponseBody
-  @PostMapping(value = "/delete")
+  @PostMapping(value = "/api/delete")
   public int deleteBoard(HttpServletRequest request, HttpServletResponse response) throws Exception{
     String docNo = request.getParameter("docNo");
 
@@ -182,7 +182,7 @@ public class BoardController {
    * @throws Exception
    */
   @ResponseBody
-  @GetMapping(value = "/reply/list")
+  @GetMapping(value = "/api/reply/list")
   public List<ReplyVO> selectReplyList(HttpServletRequest request, HttpServletResponse response) throws Exception{
     String docNo = request.getParameter("docNo");
 
@@ -202,7 +202,7 @@ public class BoardController {
    * @throws Exception
    */
   @ResponseBody
-  @PostMapping(value = "/reply/insert")
+  @PostMapping(value = "/api/reply/insert")
   public int insertReply(HttpServletRequest request, HttpServletResponse response) throws Exception{
     String docNo = request.getParameter("docNo");
     String comment = request.getParameter("comment");
@@ -225,7 +225,7 @@ public class BoardController {
    * @throws Exception
    */
   @ResponseBody
-  @PostMapping(value = "/reply/update")
+  @PostMapping(value = "/api/reply/update")
   public int updateReply(HttpServletRequest request, HttpServletResponse response) throws Exception{
     String replyNo = request.getParameter("replyNo");
     String docNo = request.getParameter("docNo");
@@ -249,7 +249,7 @@ public class BoardController {
    * @throws Exception
    */
   @ResponseBody
-  @PostMapping(value = "/reply/delete")
+  @PostMapping(value = "/api/reply/delete")
   public int deleteReply(HttpServletRequest request, HttpServletResponse response) throws Exception{
     String replyNo = request.getParameter("replyNo");
     String docNo = request.getParameter("docNo");
@@ -270,7 +270,7 @@ public class BoardController {
    * @throws Exception
    */
   @ResponseBody
-  @GetMapping(value = "/alive")
+  @GetMapping(value = "/api/alive")
   public String alieveCheck()  throws Exception{
     return "Alive";
   }
