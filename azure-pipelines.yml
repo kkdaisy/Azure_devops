@@ -50,4 +50,4 @@ stages:
               azureSubscription: $(azureSubscription)
               appType: webAppLinux
               appName: $(webAppName)
-              package: '*.jar
+              package: '$(Pipeline.Workspace)/target/*.?(war|jar)'
