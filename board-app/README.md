@@ -1,182 +1,150 @@
-# 게시판 API Server 만들기
+# 게시판 APP View 만들기
 
-## 테이블 구조
-- TB_BOARD
-```
-DOC_NO int(10) not null primary key
-TITLE varchar(400) not null
-CONTENT varchar(4000) not null
-WRITER varchar(400) not null
-REG_DTTM datetime default CURRENT_TIMESTAMP
-VIEW int(10) default 0
-```
-- TB_REPLY
-```
-REPLY_NO int(10) not null primary key
-DOC_NO int(10) not null primary key foregin key (TB_BOARD DOC_NO)
-WRITER varchar(400) not null
-CONTENT varchar(4000) not null
-REG_DTTM datetime default CURRENT_TIMESTAMP
-```
+## 개발 환경
+- @vue/cli 4.5.9 version
+- axios 0.21.1 version
+- vue-router 3.2.0 version
+- vuetify 2.2.11 version
+- vuex 3.4.0 version
+- @toast-ui/vue-editor 2.5.1 version
 
-## MySQL 테이블 생성
-- TB_BOARD
-```
-create table `TB_BOARD` (
-  `DOC_NO` int(10) not null,
-  `TITLE` varchar(400) not null,
-  `CONTENT` varchar(4000) not null,
-  `WRITER` varchar(400) not null,
-  `REG_DTTM` datetime default CURRENT_TIMESTAMP,
-  `VIEW` int(10) default 0, primary key (`DOC_NO`)
-);
-```
-- TB_REPLY
-```
-create table `TB_REPLY` (
-  `REPLY_NO` int(10) not null,
-  `DOC_NO` int(10) not null,
-  `WRITER` varchar(400) not null,
-  `CONTENT` varchar(4000) not null,
-  `REG_DTTM` datetime default CURRENT_TIMESTAMP,
-  primary key (`REPLY_NO`, `DOC_NO`),
-  foreign key (`DOC_NO`) references `TB_BOARD`(`DOC_NO`)
-);
-```
+## 프로젝트 생성
+- vue create 'Project Name'
 
-## CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
-(1) pom.xml 에 의존성 추가  
-```
-<dependency>
-  <groupId>org.apache.httpcomponents</groupId>
-  <artifactId>httpclient</artifactId>
-  <scope>test</scope>
-</dependency>
-```
-(2) 요청 메소드 또는 클래스에 @CrossOrigin 추가
+## NPM 설치
+- npm install | i
 
-## Docker
-(1) images 다운
+## 프로젝트 실행
+- npm run serve
+
+## 필요 컴포넌트
+- 상단 메뉴
+- 날씨
+- 시간
+- 게시판 목록
+- 게시판 작성, 수정
+- 에러
+- 조회수
+- 댓글
+
+## 오류
+- npm run serve 오류('vue-cli-service'은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는 배치 파일이 아닙니다)  
+  (1) NPM 캐시 제거 : npm cache clean --force  
+  (2) 프로젝트 내 node_modules, package-lock.json 파일 제거  
+  (3) NPM 설치 : npm i 또는 npm install  
+
+## App Title 변경
+- vue.config.js 에 속성 추가
 ```
-docker pull 'image name'
-```
-(2) container 구성
-```
-docker run -d -p 'port' -e 'password setting' --name 'container name' 'image name' --character-set-server=utf8 --collation-server=utf8_unicode_ci
-```
-(3) container 실행
-```
-docker exec -i -t 'container name' bash
-```
-(4) MySQL 접속
-```
-mysql -u root -p 'database name'
+"chainWebpack": (config) => {
+  config
+    .plugin('html')
+    .tap((args) => {
+      args[0].title = 'Title';
+      return args;
+    });
+},
 ```
 
-## Spring Boot + Mybatis 프로젝트 구조
-src/main/java/package/  
-src/main/java/package/config      => 설정파일  
-src/main/java/package/controller  => 컨트롤러  
-src/main/java/package/domain      => VO  
-src/main/java/package/repository  => DAO  
-src/main/java/package/service     => Service  
-  
-src/main/resources/  
-src/main/resources/mappers        => Mapper  
-
-## MySQL 접속 설정
-- resources/application.properties 내 작성
+## 파일 절대경로 설정
+- Project 폴더 내 jsconfig.json 생성 및 속성 추가
 ```
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver => 드라이버
-spring.datasource.url=jdbc:mysql://localhost:3306/DB명       => 접속 URL
-spring.datasource.username=username                          => 사용자명
-spring.datasource.password=password                          => 비밀번호
-```
-
-## Log 설정
-- resources/logback-spring.xml 생성 후 내용 설정  
-(1) Console Appender 추가  
-(2) Logger 설정 (SQL Log 출력 시 jdbc.sqlonly 추가)  
-(3) Root Logger 설정  
-
-## Auto Build 설정
-- Spring Devtools 의존성 추가
-```
-<dependency>
-  <groupId>org.springframework.boot</groupId>
-  <artifactId>spring-boot-devtools</artifactId>
-  <optional>true</optional>
-</dependency>
+{
+  "compilerOptions": {
+      "baseUrl": ".",
+      "paths": {
+          "~/*": [
+              "./*"
+          ],
+          "@/*": [
+              "./src/*"
+          ],
+      }
+  },
+  // compilerOptions 에 제외될 폴더
+  "exclude": [
+      "node_modules",
+      "dist"
+  ]
+}
 ```
 
-## MySQL 시간 동기화
-(1) DB Timezone 설정 확인 (미설정일 경우 count 값이 0)
+## views 와 components 차이
+- Router 에서 보여주는 컴포넌트 파일은 views 폴더에 위치, 그 외에는 components 폴더에 위치한다.
+
+## 사용자 정의 플러그인 사용법
+(1) @/plugins 에 플러그인.js 파일 생성  
+(2) 예제 코드
 ```
-select count(*) from mysql.time_zone;
+const myPlugin = {}
+
+myPlugin.install = function(Vue) {
+  // 1. 전역 메소드 또는 속성 추가
+  Vue.myGlobalMethod = function () {
+    // 필요한 로직 ...
+  }
+
+  // 2. 전역 에셋 추가
+  Vue.directive('my-directive', {
+    bind (el, binding, vnode, oldVnode) {
+      // 필요한 로직 ...
+    }
+    ...
+  })
+
+  // 3. 컴포넌트 옵션 주입
+  Vue.mixin({
+    created: function () {
+      // 필요한 로직 ...
+    }
+    ...
+  })
+
+  // 4. 인스턴스 메소드 추가
+  Vue.prototype.$myMethod = function (methodOptions) {
+    // 필요한 로직 ...
+  }
+
+  // 예제 메소드(페이지 이동)
+  Vue.prototype.movePage = function(url) {
+    if (this.$route.path !== url) {
+      this.$router.push(url)
+    }
+  }
+  // 예제 메소드(이전페이지 이동)
+  Vue.prototype.prevPage = function() {
+    window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')
+  }
+}
+
+export default myPlugin
 ```
-(2) Timezone 설정을 위해 명령어 입력
+(3) main.js 에 플러그인.js import 및 Vue.use(플러그인) 처리  
+(4) 사용할 곳에서 this.메소드명 으로 접근
+
+## 상위 컴포넌트에서 하위 컴포넌트 접근 방법
+- 컴포넌트 태그에 ref 속성 추가 후 필요한 곳에서 this.$refs.속성명 으로 접근가능
+- 하위 컴포넌트 내 선언된 컴포넌트의 하위 컴포넌트를 접근하려면 this.$refs.속성명.$refs.속성명2 로 접근가능
+
+## no-unused-vars 해결 방법
+- vue.config.js 파일 내 설정으로 ESLint 에러 표시 레벨을 명령어 입력 창 레벨로 내려준다.
 ```
-# mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root -p mysql
-```
-(3) DB Timezone 재확인 (기본설정일 경우 SYSTEM 으로 표시)
-```
-select @@global.time_zone, @@session.time_zone;
-```
-(4) Timezone Seoul로 변경
-```
-set global time_zone = 'Asia/Seoul';
-set time_zone = 'Asia/Seoul';
-```
-(5) (3) 쿼리 이용 Timezone Seoul로 변경 확인  
-(6) 현재시간 확인
-```
-select now();
+module.exports = {
+  devServer: {
+    overlay: false,
+  },
+}
 ```
 
-## mvn 명령어
-- 패키지 clean & build, 테스트 제외
+## ESLint 표시 설정
+- no-unused-vars 표시 설정을 변경하려면 .eslintrc.js 파일 내 설정
 ```
-./mvnw clean package -DskipTests
+rules: {
+  "no-unused-vars": 1 // 0 (경고/알림 제거), 1 (경고), 2 (빨간줄, 에러)
 ```
-
-## MySQL DataBase
-- DB 생성
+- ESLint 검사를 건너 뛸 곳에 주석 달기
 ```
-create database 'database name' default character set utf8;
+// eslint-disable-next-line 다음줄 건너뛰기
+/* eslint-disable */ 전체 파일 건너뛰기
+/* eslint-disable */ ~ /* eslint-enable */ 해당 범위 건너뛰기
 ```
-- DB 확인
-```
-show databases;
-```
-- DB 사용
-```
-use 'database name';
-```
-
-## MySQL User
-- User 생성 (% 는 외부 접근 허용)
-```
-create user 'user id'@'%' identified by 'password';
-```
-- User 삭제
-```
-drop user 'user id'@'%';
-```
-- 모든 DB, 테이블 권한 부여
-```
-grant all privileges on *.* to 'user id'@'%';
-```
-- 권한 적용
-```
-flush privileges;
-```
-- 권한 확인
-```
-show grants for 'user id'@'%';
-```
-
-## Dockerfile을 스프링 부트의 기본 디렉토리에 저장한 후 Maven 
-docker build -t springio/gs-spring-boot-docker
-
-## Gradle
-$ docker build --build-args JAR_FILE=build/libs/*.jar -t springio/gs-spring-boot-docker .
