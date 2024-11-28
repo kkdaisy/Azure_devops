@@ -1,4 +1,4 @@
-# Azure Devops를 활용한 CICD 테스트
+# Azure Devops를 활용한 CICD 구성
 
 ### 디렉터리구성
 1. board-app 
@@ -6,4 +6,4 @@
 2. board-api
 - Maven으로 빌드된 백엔드
 3. DB
-- Mysql
+- Azure Database for MySQL 사용
