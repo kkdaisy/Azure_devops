@@ -7,3 +7,6 @@
 - Maven으로 빌드된 백엔드
 3. DB
 - Azure Database for MySQL 사용
+
+### 배포
+Azure AppService로 앱 배포
